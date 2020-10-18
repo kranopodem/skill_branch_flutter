@@ -1,7 +1,9 @@
 import '../string_util.dart';
 
 enum LoginType { email, phone }
-
+mixin UserUtils {
+   String capitalize(String s) => s[0].toUpperCase() + s.substring(1).toLowerCase();
+}
 class User {
   String email;
   String phone;
