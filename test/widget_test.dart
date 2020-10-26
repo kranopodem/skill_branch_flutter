@@ -136,11 +136,4 @@ void main() {
     expect(users[0].email, user.email);
     expect(users[0].phone, user.phone);
   });
-
-    test('Test: Capitalize', () {
-    User user = User(name: "Dan Tot", phone: "+1 (231) 076-1449", email: "dan.tot@yandex.ru");
-
-
-    expect("Skill", user.capitalize('sKill'));
-  });
 }
