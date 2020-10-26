@@ -4,8 +4,6 @@ import 'package:FlutterGalleryApp/widgets/widgets.dart' as widgets;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-const String kFlutterDash =
-    'https://miro.medium.com/max/4000/1*oXbK6TZiqMeXsGW5cRvQoQ.png';
 
 class FullScreenImage extends StatefulWidget {
   FullScreenImage({Key key, this.name, this.userName, this.altDescription, this.photo})
