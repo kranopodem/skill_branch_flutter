@@ -1,5 +1,6 @@
 import 'package:FlutterGalleryApp/res/colors.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
+import 'package:FlutterGalleryApp/screens/photo_screen.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -19,31 +20,49 @@ class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(itemBuilder: (BuildContext context, int index) {
-        return Column(
-          children: <Widget>[
-            _buildItem(),
-            Divider(thickness: 2, color: AppColors.mercury)
-          ],
-        );
-      },itemCount: 10,),
+      body: ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
+            children: <Widget>[
+              _buildItem(index),
+              Divider(thickness: 2, color: AppColors.mercury)
+            ],
+          );
+        },
+        itemCount: 10,
+      ),
     );
   }
 
-  Widget _buildItem() {
+  Widget _buildItem(int index) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Photo(photoLink: kFlutterDash),
+        GestureDetector(
+          child: Hero(
+            tag: index.toString(),
+            child: Photo(photoLink: kFlutterDash),
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FullScreenImage(
+                      tag: index.toString(),
+                      name: '2',
+                      userName: 'asdasd',
+                      photo: kFlutterDash,
+                      altDescription: 'This is Flutter dash. I love him :) ♥')),
+            );
+          },
+        ),
         _buildPhotoMeta(),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal:10, vertical: 5),
-          child: Text(
-            'This is Flutter dash. I love him :) ♥',
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: AppStyles.h3.copyWith(color:AppColors.manatee)
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: Text('This is Flutter dash. I love him :) ♥',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: AppStyles.h3.copyWith(color: AppColors.manatee)),
         )
       ],
     );
