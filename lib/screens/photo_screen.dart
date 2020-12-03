@@ -5,20 +5,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FullScreenImage extends StatefulWidget {
-  FullScreenImage(
-      {Key key,
-      this.tag,
-      this.name,
-      this.userName,
-      this.altDescription,
-      this.photo})
-      : super(key: key);
+  FullScreenImage({
+    Key key,
+    this.name,
+    this.userName,
+    this.altDescription,
+    this.photo,
+    this.userPhoto,
+    this.heroTag,
+  }) : super(key: key);
 
   final String name;
   final String userName;
   final String altDescription;
   final String photo;
-  final String tag;
+  final String heroTag;
+  final String userPhoto;
 
   @override
   _FullScreenImageState createState() => _FullScreenImageState();
@@ -30,24 +32,33 @@ class _FullScreenImageState extends State<FullScreenImage>
   get userName => widget.userName ?? "";
   get altDescription => widget.altDescription ?? "";
   get photo => widget.photo ?? "";
-  get tag => widget.tag ?? "";
+  get tag => widget.heroTag ?? "";
+  get userPhoto => widget.userPhoto ?? "";
 
   AnimationController _controller;
+  Animation<double> opacityUserAvatar;
+  Animation<double> opacityText;
 
   @override
   void initState() {
     super.initState();
 
     _controller = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
-  }
+        duration: const Duration(milliseconds: 1500), vsync: this);
 
-  Future<void> _playAnimation() async {
-    try {
-      await _controller.forward().orCancel;
-    } on TickerCanceled {
-      // the animation got canceled, probably because it was disposed of
-    }
+    opacityUserAvatar = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Interval(0.0, 0.5, curve: Curves.ease),
+      ),
+    );
+    opacityText = Tween<double>(begin: 0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Interval(0.5, 1.0, curve: Curves.ease),
+      ),
+    );
+    _controller.forward();
   }
 
   @override
@@ -58,7 +69,6 @@ class _FullScreenImageState extends State<FullScreenImage>
 
   @override
   Widget build(BuildContext context) {
-    _playAnimation();
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -76,13 +86,7 @@ class _FullScreenImageState extends State<FullScreenImage>
             overflow: TextOverflow.ellipsis,
             style: AppStyles.h3.copyWith(color: AppColors.manatee),
           ),
-          StaggeredAnimation(
-            animationController: _controller,
-            name: widget.name,
-            userName: widget.userName,
-            userPhoto:
-                'https://sun9-37.userapi.com/knGRo-req5HNHJhc06U-ySPXKW1ouzceDVTwnQ/6yIVrjPc2rs.jpg',
-          ),
+          _buildPhotoMeta(),
           Row(
             children: <Widget>[
               _buildButton('Save', () {
@@ -129,54 +133,8 @@ class _FullScreenImageState extends State<FullScreenImage>
       ),
     );
   }
-}
 
-class StaggeredAnimation extends StatelessWidget {
-  StaggeredAnimation(
-      {Key key,
-      this.animationController,
-      this.name,
-      this.userName,
-      this.userPhoto})
-      : opacityUserAvatar = Tween<double>(begin: 0.0, end: 1.0).animate(
-          CurvedAnimation(
-            parent: animationController,
-            curve: Interval(0.0, 0.5, curve: Curves.ease),
-          ),
-        ),
-        opacityText = Tween<double>(begin: 0, end: 1.0).animate(
-          CurvedAnimation(
-            parent: animationController,
-            curve: Interval(0.5, 1.0, curve: Curves.ease),
-          ),
-        ),
-        super(key: key);
-
-  final Animation<double> opacityUserAvatar;
-  final Animation<double> opacityText;
-  final Animation<double> animationController;
-
-  final String name;
-  final String userName;
-  final String userPhoto;
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      builder: _buildPhotoMetaData,
-      animation: animationController,
-    );
-  }
-
-  Widget _buildPhotoMetaData(BuildContext context, Widget child) {
-    // ghjdthrf pyfxtybq
-
-    // double a, b, c, d;
-    //   a = animationController.value;
-    //   b = opacityUserAvatar.value;
-    //   print('$a - OpacityUserAvatar $b');
-    //  c = animationController.value;
-    // d = opacityText.value;
-    //print('$c - opacityText $d');
+  Widget _buildPhotoMeta() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Row(
@@ -184,13 +142,20 @@ class StaggeredAnimation extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              FadeTransition(
-                opacity: opacityUserAvatar,
+              AnimatedBuilder(
+                animation: _controller,
+                builder: (context, Widget child) {
+                  return Opacity(
+                      opacity: opacityUserAvatar.value, child: child);
+                },
                 child: widgets.UserAvatar(userPhoto),
               ),
               SizedBox(width: 6),
-              FadeTransition(
-                opacity: opacityText,
+              AnimatedBuilder(
+                animation: _controller,
+                builder: (context, Widget child) {
+                  return Opacity(opacity: opacityText.value, child: child);
+                },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

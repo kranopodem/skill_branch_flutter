@@ -48,9 +48,11 @@ class _FeedState extends State<Feed> {
               context,
               MaterialPageRoute(
                   builder: (context) => FullScreenImage(
-                      tag: index.toString(),
+                      heroTag: index.toString(),
                       name: '2',
                       userName: 'asdasd',
+                      userPhoto:
+                          'https://sun9-37.userapi.com/knGRo-req5HNHJhc06U-ySPXKW1ouzceDVTwnQ/6yIVrjPc2rs.jpg',
                       photo: kFlutterDash,
                       altDescription: 'This is Flutter dash. I love him :) ♥')),
             );
