@@ -18,6 +18,11 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.builder(
@@ -44,18 +49,15 @@ class _FeedState extends State<Feed> {
             child: Photo(photoLink: kFlutterDash),
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => FullScreenImage(
-                      heroTag: index.toString(),
-                      name: '2',
-                      userName: 'asdasd',
-                      userPhoto:
-                          'https://sun9-37.userapi.com/knGRo-req5HNHJhc06U-ySPXKW1ouzceDVTwnQ/6yIVrjPc2rs.jpg',
-                      photo: kFlutterDash,
-                      altDescription: 'This is Flutter dash. I love him :) ♥')),
-            );
+            Navigator.pushNamed(context, '/fullScreenImage',
+                arguments: FullScreenImageArguments(
+                    heroTag: index.toString(),
+                    name: '2',
+                    userName: 'asdasd',
+                    userPhoto:
+                        'https://sun9-37.userapi.com/knGRo-req5HNHJhc06U-ySPXKW1ouzceDVTwnQ/6yIVrjPc2rs.jpg',
+                    photo: kFlutterDash,
+                    altDescription: 'This is Flutter dash. I love him :) ♥'));
           },
         ),
         _buildPhotoMeta(),

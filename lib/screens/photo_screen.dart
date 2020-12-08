@@ -1,8 +1,29 @@
 import 'package:FlutterGalleryApp/res/app_icons.dart';
 import 'package:FlutterGalleryApp/res/res.dart';
 import 'package:FlutterGalleryApp/widgets/widgets.dart' as widgets;
+import 'package:FlutterGalleryApp/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+
+class FullScreenImageArguments {
+  FullScreenImageArguments({
+    Key key,
+    this.name,
+    this.userName,
+    this.altDescription,
+    this.photo,
+    this.userPhoto,
+    this.heroTag,
+  });
+
+  final String name;
+  final String userName;
+  final String altDescription;
+  final String photo;
+  final String heroTag;
+  final String userPhoto;
+}
 
 class FullScreenImage extends StatefulWidget {
   FullScreenImage({
@@ -80,30 +101,73 @@ class _FullScreenImageState extends State<FullScreenImage>
               photoLink: photo,
             ),
           ),
-          Text(
-            altDescription,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: AppStyles.h3.copyWith(color: AppColors.manatee),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Text(
+              altDescription,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: AppStyles.h3.copyWith(color: AppColors.manatee),
+            ),
           ),
           _buildPhotoMeta(),
-          Row(
-            children: <Widget>[
-              _buildButton('Save', () {
-                print('test');
-              }),
-              SizedBox(
-                width: 12,
-              ),
-              _buildButton('Visit', () {
-                print('test');
-              }),
-            ],
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Row(
+              children: <Widget>[
+                _buildButton('Save', () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Download photos'),
+                        content:
+                            Text('Are you sure you want to download a photo?'),
+                        actions: [
+                          FlatButton(
+                            child: Text('Download'),
+                            onPressed: () {
+                              GallerySaver.saveImage(
+                                  "https://mobikul.com/wp-content/uploads/2019/11/Simulator-Screen-Shot-iPhone-X%CA%80-2019-11-01-at-19.05.50-473x1024.png");
+                              Navigator.pop(context);
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('Close'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }),
+                SizedBox(
+                  width: 12,
+                ),
+                _buildButton('Visit', () {
+                  print('test');
+                }),
+              ],
+            ),
           )
         ],
       ),
       appBar: AppBar(
         title: Text('Photo'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {
+              showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return ClaimBottomSheet();
+                  });
+            },
+          ),
+        ],
         leading: IconButton(
           icon: Icon(CupertinoIcons.back),
           onPressed: () {
